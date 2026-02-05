@@ -1,0 +1,366 @@
+{
+  "info": {
+    "name": "Egg Delivery API",
+    "description": "Collection Postman pour tester l'API de l'application Egg Delivery",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Jean Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"motdepasse\": \"password123\",\n  \"telephone\": \"+237690000000\",\n  \"adresse\": \"Yaoundé, Cameroun\",\n  \"typeUtilisateur\": \"CLIENT\",\n  \"preferencesLivraison\": \"Livraison le matin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"token\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jean.dupont@example.com\",\n  \"motdepasse\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produits",
+      "item": [
+        {
+          "name": "Get All Produits",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produits",
+              "host": ["{{base_url}}"],
+              "path": ["api", "produits"]
+            }
+          }
+        },
+        {
+          "name": "Get Produit By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produits/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "produits", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Produit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Œufs Bio Extra Large\",\n  \"description\": \"Œufs biologiques de qualité supérieure\",\n  \"typeOeuf\": \"Bio\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/produits/vendeur/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "produits", "vendeur", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Offres",
+      "item": [
+        {
+          "name": "Get All Offres",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/offres",
+              "host": ["{{base_url}}"],
+              "path": ["api", "offres"]
+            }
+          }
+        },
+        {
+          "name": "Create Offre",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produitId\": 1,\n  \"prixUnitaire\": 150.00,\n  \"stock\": 500,\n  \"uniteDeVente\": \"Unité\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/offres",
+              "host": ["{{base_url}}"],
+              "path": ["api", "offres"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Commandes",
+      "item": [
+        {
+          "name": "Get My Commandes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/commandes/client/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes", "client", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Commande",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adresseLivraison\": \"Yaoundé Nlongkak, Rue 1234\",\n  \"lignesCommande\": [\n    {\n      \"offreProduitId\": 1,\n      \"quantite\": 2\n    },\n    {\n      \"offreProduitId\": 2,\n      \"quantite\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/commandes/client/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes", "client", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Commande Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/commandes/1/statut?statut=CONFIRMEE",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes", "1", "statut"],
+              "query": [
+                {
+                  "key": "statut",
+                  "value": "CONFIRMEE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Livraisons",
+      "item": [
+        {
+          "name": "Get Livraison By Commande",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/livraisons/commande/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "livraisons", "commande", "1"]
+            }
+          }
+        },
+        {
+          "name": "Assigner Livreur",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/livraisons/1/assigner?livreurId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "livraisons", "1", "assigner"],
+              "query": [
+                {
+                  "key": "livreurId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Demarrer Livraison",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/livraisons/1/demarrer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "livraisons", "1", "demarrer"]
+            }
+          }
+        },
+        {
+          "name": "Update Position",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/livraisons/1/position?latitude=3.8480&longitude=11.5021",
+              "host": ["{{base_url}}"],
+              "path": ["api", "livraisons", "1", "position"],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "3.8480"
+                },
+                {
+                  "key": "longitude",
+                  "value": "11.5021"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Terminer Livraison",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/livraisons/1/terminer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "livraisons", "1", "terminer"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

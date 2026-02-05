@@ -1,0 +1,14 @@
+package com.eggdelivery.repository;
+
+import com.eggdelivery.model.Vendeur;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface VendeurRepository extends JpaRepository<Vendeur, Long> {
+    Optional<Vendeur> findByEmail(String email);
+    List<Vendeur> findByStatut(Vendeur.StatutUtilisateur statut);
+}

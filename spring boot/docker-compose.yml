@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Base de données MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: egg-delivery-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: egg_delivery_db
+      MYSQL_USER: eggdelivery
+      MYSQL_PASSWORD: eggdelivery123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - egg-delivery-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Application Spring Boot
+  app:
+    build: .
+    container_name: egg-delivery-app
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/egg_delivery_db?createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: eggdelivery
+      SPRING_DATASOURCE_PASSWORD: eggdelivery123
+      JWT_SECRET: ProductionSecretKeyForEggDeliveryApplicationChangeThis12345678
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - egg-delivery-network
+    restart: unless-stopped
+
+networks:
+  egg-delivery-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
